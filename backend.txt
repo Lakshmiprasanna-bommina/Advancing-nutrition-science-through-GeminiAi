@@ -1,0 +1,49 @@
+import os
+from flask import Flask, render_template, request, jsonify
+from dotenv import load_dotenv
+import google.generativeai as genai
+
+# Load environment variables
+load_dotenv()
+
+app = Flask(__name__)
+
+# Configure Gemini API
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+@app.route("/analyze", methods=["POST"])
+def analyze():
+    try:
+        food_input = request.json.get("foodInput")
+
+        model = genai.GenerativeModel("gemini-1.5-flash")
+
+        prompt = f"""
+        You are an advanced nutrition scientist AI.
+
+        Analyze the following meal:
+
+        {food_input}
+
+        Provide:
+        1. Estimated calories
+        2. Macronutrient breakdown (Protein, Carbs, Fats)
+        3. Micronutrient highlights
+        4. Health impact analysis
+        5. Optimization suggestions
+        """
+
+        response = model.generate_content(prompt)
+
+        return jsonify({"analysis": response.text})
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
