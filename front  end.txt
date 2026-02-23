@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Advancing Nutrition Science Through Gemini AI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #e0f7fa, #e8f5e9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            width: 600px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            background: #2e7d32;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #1b5e20;
+        }
+
+        #result {
+            margin-top: 20px;
+            white-space: pre-wrap;
+            background: #f1f8e9;
+            padding: 15px;
+            border-radius: 8px;
+            min-height: 120px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🥗 Advancing Nutrition Science Through Gemini AI</h1>
+
+    <textarea id="foodInput" placeholder="Enter your meal (e.g., 2 eggs, 1 avocado, 1 slice whole wheat toast)"></textarea>
+
+    <button onclick="analyzeMeal()">Analyze Meal</button>
+
+    <div id="result"></div>
+</div>
+
+<script>
+async function analyzeMeal() {
+    const foodInput = document.getElementById("foodInput").value;
+    const resultDiv = document.getElementById("result");
+
+    resultDiv.innerHTML = "Analyzing nutrition...";
+
+    const response = await fetch("/analyze", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ foodInput })
+    });
+
+    const data = await response.json();
+
+    if (data.analysis) {
+        resultDiv.innerHTML = data.analysis;
+    } else {
+        resultDiv.innerHTML = "Error: " + data.error;
+    }
+}
+</script>
+
+</body>
+</html>
